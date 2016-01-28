@@ -105,17 +105,29 @@ class nova::params {
         'debian': {
           $spicehtml5proxy_package_name = 'nova-consoleproxy'
           $spicehtml5proxy_service_name = 'nova-spicehtml5proxy'
-          $vncproxy_package_name    = 'nova-consoleproxy'
+          $vncproxy_package_name        = 'nova-consoleproxy'
           # Use default provider on Debian
-          $special_service_provider = undef
+          $special_service_provider     = undef
           $libvirt_service_name         = 'libvirtd'
+        }
+        'ubuntu': {
+          $spicehtml5proxy_package_name = 'nova-spiceproxy'
+          $spicehtml5proxy_service_name = 'nova-spiceproxy'
+          $vncproxy_package_name        = 'nova-novncproxy'
+          $libvirt_service_name         = 'libvirt-bin'
+          if (versioncmp($::operatingsystemmajrelease, '15') >= 0) {
+            # https://lists.ubuntu.com/archives/ubuntu-devel-announce/2015-March/001130.html
+            $special_service_provider = 'systemd'
+          } else {
+            $special_service_provider = 'upstart'
+          }
         }
         default: {
           $spicehtml5proxy_package_name = 'nova-spiceproxy'
           $spicehtml5proxy_service_name = 'nova-spiceproxy'
-          $vncproxy_package_name    = 'nova-novncproxy'
+          $vncproxy_package_name        = 'nova-novncproxy'
           # some of the services need to be started form the special upstart provider
-          $special_service_provider = 'upstart'
+          $special_service_provider     = 'upstart'
           $libvirt_service_name         = 'libvirt-bin'
         }
       }
